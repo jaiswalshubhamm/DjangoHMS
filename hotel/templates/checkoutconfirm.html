@@ -1,0 +1,99 @@
+{% extends 'shared/base.html' %}
+{% block head_title %}Checkout{% endblock %}
+{% block content %}
+{% load static %}
+<script src="https://js.stripe.com/v3/"></script>
+<h1 class="text-center my-4">Checkout</h1>
+<div class="container">
+  <div class="row">
+    <div class="col-3"></div>
+    <div class="col-6">
+      <div class="container">
+        <p class="warning"> You will <strong>NOT BE CHARGED</strong> money. But still don't enter actual credit/debit
+          card data </p>
+        <div class="row">
+          <div class="col-6">
+            <h3>Card Number : </h3>
+          </div>
+          <div class="col-6">
+            4242 4242 4242 4242
+          </div>
+        </div>
+        <div class="row">
+          <div class="fw-bold col-6">
+            Name:
+          </div>
+          <div class="col-6">
+            {{person.name}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="fw-bold col-6">
+            Email:
+          </div>
+          <div class="col-6">
+            {{person.email}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="fw-bold col-6">
+            Price:
+          </div>
+          <div class="col-6">
+            Rs. {{amount}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="fw-bold col-6">
+            Category :
+          </div>
+          <div class="col-6">
+            {{room_name}} Suite
+          </div>
+        </div>
+        <div class="row">
+          <div class="fw-bold col-6">
+            Check In :
+          </div>
+          <div class="col-6">
+            {{check_in}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="fw-bold col-6">
+            Check Out :
+          </div>
+          <div class="col-6">
+            {{check_out}}
+          </div>
+        </div>
+      </div>
+      <button class="btn text-white" style="background: #030234;" id="checkout_btn">Checkout</button>
+      <h3>CVV number, and Card numer are random.</h3>
+      <p class="small">(Dummy Data for successful payment)</p>
+    </div>
+  </div>
+  <div class="col-2"></div>
+</div>
+</div>
+
+<script>
+  const checkout_id = `{{ checkout_id }}`;
+  var stripe = Stripe("pk_test_51IvCaFSC7JV9pI8Ofrvi4gB6DogIRXtQ3jKFSDvhZJDETThlacfaUAON8vGtnzDUsSMCJ1Svix8SQCfuzC5iaM1P00qXFPYbgW");
+  var checkoutButton = document.getElementById("checkout_btn");
+  checkoutButton.addEventListener("click", function () {
+    stripe.redirectToCheckout({
+      sessionId: `${checkout_id}`
+    })
+      .then(function (result) {
+        if (result.error) {
+          alert(result.error.message);
+        }
+      })
+      .catch(function (error) {
+        console.error("Error:", error);
+      })
+  });
+</script>
+
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'shared/base.html' %}
+{% block content %}
+{% load static %}
+<h1 class="text-center my-4">Room Details</h1>
+<div class="container">
+  <div class="row">
+    {% for room in room_list %}
+    <div class="col-4">
+      <div class="card h-100 p-4">
+        <img src="{% static 'hotel/img/ac.jpg' %}" class="card-img-top" alt="...">
+        <div class="card-body">
+          <div class="room-title">
+            <a href="/room/{{room.category}}">
+              <h5 class="card-title fw-bold text-center text-white">{{room.category}}</h5>
+            </a>
+          </div>
+          <p class="card-text"><span class="fw-bold"> Room Number : </span>{{room.number}}</p>
+          <p class="card-text"><span class="fw-bold"> Price : </span>Rs. {{room.category.rate}}/-</p>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

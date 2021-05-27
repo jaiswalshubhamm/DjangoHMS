@@ -1,0 +1,61 @@
+{% extends 'shared/base.html' %}
+{% block head_title %}Log In{% endblock %}
+{% block content %}
+{% load static %}
+<h1 class="text-center my-4">Customer Login</h1>
+<div class="container">
+  {% if form.errors %}
+  {% for field in form %}
+  {% for error in field.errors %}
+  <div class="alert alert-danger">
+    <strong>{{ error|escape }}</strong>
+  </div>
+  {% endfor %}
+  {% endfor %}
+  {% for error in form.non_field_errors %}
+  <div class="alert alert-danger">
+    <strong>{{ error|escape }}</strong>
+  </div>
+  {% endfor %}
+  {% endif %}
+</div>
+<div class="container d-flex justify-content-center">
+  <form method="POST" action="{% url 'account_login' %}">
+    {% csrf_token %}
+    {% if redirect_field_value %}
+    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+    {% endif %}
+
+    <h1>Log In</h1>
+      <!-- <a href="#" class="btn-face m-b-20"><i class="fa fa-facebook-official"></i>Facebook </a>
+      <a href="#" class="btn-google m-b-20"><img src="{% static 'allauth/images/icons/icon-google.png'%}"
+          alt="GOOGLE">Google</a> -->
+      <div class="row my-3">
+        <label class="col-6 fw-bold" for="id_email">Email</label>
+        <div class="col-6">
+          <input class="form-control" autocomplete="username" type="email" name="login" placeholder="E-mail address"
+            autofocus="autofocus" required="" id="id_login">
+        </div>
+      </div>
+
+      <div class="row my-3">
+        <label for="id_password1" class="col-6 fw-bold">Password</label>
+        <div class="col-6">
+          <input autocomplete="current-password" class="form-control" type="password" name="password"
+            placeholder="Password" required="" id="id_password">
+        </div>
+      </div>
+      <a href="{% url 'account_reset_password' %}">Forgot Password?</a>
+
+      <div class="row">
+        <div class="col-6"></div>
+        <div class="col-6">
+          <button class="btn text-white my-3" style="background: #030234;" type="submit">Log In</button>
+        </div>
+      </div>
+      <div class="text-center">
+        Not a member? <a href="{{ signup_url }}">Sign Up Now</a>
+      </div>
+  </form>
+</div>
+{% endblock %}

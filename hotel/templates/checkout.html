@@ -1,0 +1,43 @@
+{% extends 'shared/base.html' %}
+{% block head_title %}Checkout{% endblock %}
+{% block content %}
+{% load static %}
+<h1 class="text-center my-4">Checkout</h1>
+<blockquote class="text-center">NOTE: You will <strong>NOT</strong> be charged money.&#13;
+  So you can continue and test the app! Cheers &#x1f603;
+</blockquote>
+<div class="container">
+  <div class="row">
+    <div class="col-3"></div>
+    <div class="col-6">
+      <form method="POST" action="">
+        {% csrf_token %}
+        {% if redirect_field_value %}
+        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+        {% endif %}
+
+        <div class="row my-3">
+          <label for="id_name" class="col-6 fw-bold">Name </label>
+          <div class="col-6">
+            <input class="input100" type="text" name="name" placeholder="Name" required id="id_name">
+          </div>
+        </div>
+        <div class="row my-3">
+          <label for="id_email" class="col-6 fw-bold">Email</label>
+          <div class="col-6">
+            <input class="input100" type="email" name="email" placeholder="Email" required id="id_email">
+          </div>
+        </div>
+
+        <div class="row my-3">
+          <div class="col-6"></div>
+          <div class="col-6">
+            <button type="submit" class="btn text-white" style="background: #030234;" type="submit">Continue</button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="col-2"></div>
+  </div>
+</div>
+{% endblock %}

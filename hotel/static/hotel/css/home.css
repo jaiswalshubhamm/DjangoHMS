@@ -1,0 +1,29 @@
+.bg-nav{
+    background: #030234;
+}
+.carousel-inner {
+    height: 70vh;
+}
+.bg-box {
+    background: #F0F5FE;
+}
+.title{
+color: #2F2F3A;
+}
+.card {
+    background: #F7FAFE;
+}
+
+.main-body {
+    background: #EDF3FF;
+
+}
+.card-body {
+    background: #FFFFFF;
+}
+.room-title {
+    background: #030303;
+}
+.footer {
+    background: #030234;
+}

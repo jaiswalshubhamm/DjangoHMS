@@ -1,0 +1,31 @@
+{% extends 'shared/base.html' %}
+{% block head_title %}About{% endblock %}
+{% block content %}
+{% load static %}
+<div class="container ">
+    <div class="row my-4">
+        <div class="col-md-12 col-lg-6">
+            <img src="{% static 'hotel/img/hotel1.jpg' %}" class="img-fluid" alt="...">
+        </div>
+        <div class="col-md-12 col-lg-6">
+            <h3 class="text-center">Hotel Management ERP System</h3>
+            <p class="card-text">Online hotel reservations are a popular method for booking hotel rooms.
+                Travellers can book rooms on a computer by using online security
+                to protect thier privacy and financial information and by using several online travel
+                agents to compare prices and facilities at different hotels.</p>
+            <p class="card-text">Prior to the Internet, travellers could write, telephone the hotel directly, or use
+                a travel agent to make a reservation.
+                Nowadays, online travel agents have pictures of hotels and rooms, information on prices and deals,
+                and even
+                information on local resorts. Many also allow reviews of the traveler to be recorded with the online
+                travel agent.</p>
+            <p class="card-text">Online hotel reservations are also helpful for making last minute travel
+                arrangements.
+                Hotels may drop the price of a room if some rooms are still available. There are several websites
+                that specialize in searches for deals on the room.
+                popular method for booking hotel rooms.</p>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,133 @@
+{%load static %}
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <title>{% block head_title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'hotel/css/home.css' %}">
+    <script src="https://kit.fontawesome.com/692189991f.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <!-- Nav Bar Start -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-nav">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Hotel Management System</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ms-auto mx-4 mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/allrooms">All Rooms</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/book">Book Room</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/about">About</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/accounts/logout">Logout <i class="fa fa-sign-out"></i></a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/accounts/signup">Register <i
+                                class="fas fa-user-plus"></i></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/accounts/login">Login <i class="fa fa-sign-in"></i>
+                        </a>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/contact">Contact Us</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- Nav Bar End -->
+
+    {% if messages %}
+    <div>
+        <!-- <strong>Messages:</strong> -->
+        {% for message in messages %}
+        <div class="alert alert-success d-flex align-items-center" role="alert">
+            <div>{{message}}</div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% block content %}
+    {% endblock %}
+
+    <!-- Footer Start -->
+    <div class="container-fluid footer justify-content-center text-white">
+        <footer>
+            <div class="row my-5 justify-content-center py-5">
+                <div class="col-11">
+                    <div class="row ">
+                        <div class="col-xl-8 col-md-4 col-sm-4 col-12 my-auto mx-auto">
+                            <h3 class="mb-md-0 mb-5 bold-text">Hotel Management System.</h3>
+                        </div>
+                        <div class="col-xl-2 col-md-4 col-sm-4 col-12">
+                            <h6 class="mb-3 mb-lg-4"><b>MENU</b></h6>
+                            <ul class="list-unstyled">
+                                <li>Home</li>
+                                <li>About</li>
+                                <li>Rooms</li>
+                                <li>Food</li>
+                            </ul>
+                        </div>
+                        <div class="col-xl-2 col-md-4 col-sm-4 col-12">
+                            <h6 class="mb-3 mb-lg-4 mt-sm-0 mt-5"><b>ADDRESS</b></h6>
+                            <p class="mb-1">605, RATAN ICON BUILDING</p>
+                            <p>SEAWOODS SECTOR</p>
+                        </div>
+                    </div>
+                    <div class="row ">
+                        <div class="col-xl-8 col-md-4 col-sm-4 col-auto my-md-0 mt-5 order-sm-1 order-3 align-self-end">
+                            <p class="mb-0 pb-0 bold-text"> <span class="mx-2"><i class="fa fa-facebook"
+                                        aria-hidden="true"></i></span> <span class="mx-2"><i
+                                        class="fa fa-linkedin-square" aria-hidden="true"></i></span> <span
+                                    class="mx-2"><i class="fa fa-twitter" aria-hidden="true"></i></span> <span
+                                    class="mx-2"><i class="fa fa-instagram" aria-hidden="true"></i></span> </p><small
+                                class="rights"><span>&#174;</span> All Rights Reserved.</small>
+                        </div>
+                        <div class="col-xl-2 col-md-4 col-sm-4 col-auto order-1 align-self-end ">
+                            <h6 class="mt-2"><b>NIHARIKA DIXIT</b></h6><small> <span><i class="fa fa-envelope"
+                                        aria-hidden="true"></i></span> niharikadixitmba@gmail.com</small>
+                        </div>
+                        <div class="col-xl-2 col-md-4 col-sm-4 col-auto order-2 align-self-end mt-3 ">
+                            <h6><b>NIHARIKA DIXIT</b></h6><small><span><i class="fa fa-envelope"
+                                        aria-hidden="true"></i></span> niharikadixitmba@gmail.com</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <!-- Footer End -->
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
