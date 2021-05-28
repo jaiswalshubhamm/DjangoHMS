@@ -2,9 +2,12 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
+import dotenv
 
 
 def main():
+    dotenv.read_dotenv()
+    # print('client_id', os.environ.get('GOOGLE_CLIENT_ID'))
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'HMS.settings')
     try:
         from django.core.management import execute_from_command_line

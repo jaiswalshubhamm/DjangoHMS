@@ -20,7 +20,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-&!k%+i%4f+o_4_d32o(xzn4s!a8f2ddjfn1z%zxa21(x_o(u%z'
+SECRET_KEY = os.environ.get('SECRET_KEY')
+# 'django-insecure-&!k%+i%4f+o_4_d32o(xzn4s!a8f2ddjfn1z%zxa21(x_o(u%z'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -29,7 +30,6 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -64,13 +64,10 @@ MIDDLEWARE = [
 
 
 AUTHENTICATION_BACKENDS = [
-
     # Needed to login by username in Django admin, regardless of `allauth`
     'django.contrib.auth.backends.ModelBackend',
-
     # `allauth` specific authentication methods, such as login by e-mail
     'allauth.account.auth_backends.AuthenticationBackend',
-
 ]
 
 ROOT_URLCONF = 'HMS.urls'
@@ -141,6 +138,11 @@ USE_TZ = True
 
 SITE_ID = 2
 
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = 'mandotory'
+ACCOUNT_USERNAME_REQUIRED = False
+
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 # Static files (CSS, JavaScript, Images)
@@ -161,8 +163,9 @@ SOCIALACCOUNT_PROVIDERS = {
         # (``socialaccount`` app) containing the required client
         # credentials, or list them here:
         'APP': {
-            'client_id': '123',
-            'secret': '456',
+            'client_id': os.environ.get('GOOGLE_CLIENT_ID'),
+            # '793973873125-lhcbfqnel4q2ic3opjohi5lm4lfgc47o.apps.googleusercontent.com',
+            'secret': 'hRbVGZXqwxeb961UtaUiZQxU',
             'key': ''
         }
     }
