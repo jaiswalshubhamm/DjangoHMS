@@ -30,7 +30,6 @@ class Booking(models.Model):
     PAYMENT_STATUSES = (
         ('COM', 'PAYMENT_COMPLETE'),
         ('INC', 'PAYMENT_INCOMPLETE'),
-        ('PAR', 'PAYMENT_PARTIALLY_COMPLETE'),
     )
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE)

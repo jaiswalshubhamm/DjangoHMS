@@ -7,13 +7,10 @@ from hotel.booking_functions.availability import check_availability
 from django.contrib.auth.models import User
 from hotel.booking_functions.find_total_room_charge import find_total_room_charge
 from django.contrib.auth.decorators import login_required
-
-# from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
-
+import os
 import stripe
-stripe.api_key = 'sk_test_51IvCaFSC7JV9pI8OXxMGewXj7uiWzk1XKy7AuFB6MdPu35Lz2cvt3VDAj8JRw6EJoO05FiWNf39WXRPEXpCk7R1q00F6AyVmpO'
 
+stripe.api_key = os.environ.get('STRIPE_API_SECRET_KEY')
 # Create your views here.
 
 class BookingFormView(View):
@@ -36,9 +33,7 @@ class BookingFormView(View):
             request.session['check_out'] = data['check_out'].strftime(
                 "%Y-%m-%dT%H:%M")
             request.session['room_category'] = data['room_category'].category
-            request.session['amount'] = find_total_room_charge(
-                data['check_in'], data['check_out'], data['room_category'])
-            # return redirect(reverse('account_login'))
+            request.session['amount'] = find_total_room_charge(data['check_in'], data['check_out'], data['room_category'])
             return redirect('hotel:CheckoutView')
         return HttpResponse('form not valid', form.errors)
 
@@ -100,27 +95,14 @@ class CheckoutView(View):
     def get(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             return redirect('/accounts/login')
-        person_form = PersonForm()
-        context = {
-            "person_form": person_form,
-        }
-        return render(request, 'checkout.html', context)
-
-    def post(self, request, *args, **kwargs):
-        person_name = request.POST['name']
-        person_email = request.POST['email']
-        room = RoomCategory.objects.get(category = request.session['room_category'])
+        user = request.user
+        person_name = user.first_name + user.last_name
+        person_email = user.email
         customer = stripe.Customer.create(
             name=person_name,
             email=person_email
         )
-        person = Person.objects.create(
-            name=person_name,
-            email=person_email
-        )
-        person.save()
         try:
-            stripe.api_key = 'sk_test_51IvCaFSC7JV9pI8OXxMGewXj7uiWzk1XKy7AuFB6MdPu35Lz2cvt3VDAj8JRw6EJoO05FiWNf39WXRPEXpCk7R1q00F6AyVmpO'
             checkout_session = stripe.checkout.Session.create(
                 success_url="http://127.0.0.1:8000/success",
                 cancel_url="http://127.0.0.1:8000/cancel",
@@ -129,7 +111,7 @@ class CheckoutView(View):
                     {
                         'price_data': {
                             'currency': 'inr',
-                            'unit_amount': int(room.rate)*100,
+                            'unit_amount': int(request.session['amount'])*100,
                             'product_data': {
                                 'name': request.session['room_category'],
                             },
@@ -139,27 +121,24 @@ class CheckoutView(View):
                 ],
                 mode="payment",
             )
-            # booking = Booking.objects.create(
-            #     user = request.user,
-            #     room = request.session['room_category'],
-            #     check_in = request.session['check_in'],
-            #     check_out = request.session['check_out'],
-            #     payment_status = 'INC'
-            # )
-            # print(booking)
-            # booking.save()
+            booking = Booking.objects.create(
+                user = request.user,
+                room = request.session['room_category'],
+                check_in = request.session['check_in'],
+                check_out = request.session['check_out'],
+                payment_status = 'INC'
+            )
+            print(booking)
+            booking.save()
             context = {
-                'person': person,
                 'checkout_id': checkout_session.id,
-                # 'amount':  request.session['amount'],
+                'amount':  request.session['amount'],
                 'room_image': '',
                 'room_name': request.session['room_category'],
-                'amount': room.rate, #request.session['amount'],
+                'amount': request.session['amount'],
                 'check_in': request.session['check_in'],
                 'check_out': request.session['check_out'],
             }
-
-            print('chkout_context = ', context)
             return render(request, 'checkoutconfirm.html', context)
         except Exception as e:
             print('failed , ', request.session)
@@ -174,10 +153,8 @@ def AboutView(request):
 def success_view(request):
     return render(request, 'success.html')
 
-
 def cancel_view(request):
     return render(request, 'cancel.html')
-
 
 def ContactUsView(request):
     return render(request, 'contactus.html')

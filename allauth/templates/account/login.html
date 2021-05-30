@@ -2,6 +2,7 @@
 {% block head_title %}Log In{% endblock %}
 {% block content %}
 {% load static %}
+{% load account socialaccount %}
 <h1 class="text-center my-4">Customer Login</h1>
 <div class="container">
   {% if form.errors %}
@@ -19,43 +20,53 @@
   {% endfor %}
   {% endif %}
 </div>
-<div class="container d-flex justify-content-center">
-  <form method="POST" action="{% url 'account_login' %}">
-    {% csrf_token %}
-    {% if redirect_field_value %}
-    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-    {% endif %}
 
-    <h1>Log In</h1>
-      <!-- <a href="#" class="btn-face m-b-20"><i class="fa fa-facebook-official"></i>Facebook </a>
-      <a href="#" class="btn-google m-b-20"><img src="{% static 'allauth/images/icons/icon-google.png'%}"
-          alt="GOOGLE">Google</a> -->
-      <div class="row my-3">
-        <label class="col-6 fw-bold" for="id_email">Email</label>
-        <div class="col-6">
-          <input class="form-control" autocomplete="username" type="email" name="login" placeholder="E-mail address"
-            autofocus="autofocus" required="" id="id_login">
-        </div>
+<div class="row">
+  <div class="col-3"></div>
+  <div class="col-6">
+    <div class="container card d-flex justify-content-center">
+      <div class="card-header">
+        <h1>Log In</h1>
       </div>
+      <form class="card-body" method="POST" action="{% url 'account_login' %}">
+        {% csrf_token %}
+        {% if redirect_field_value %}
+        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+        {% endif %}
 
-      <div class="row my-3">
-        <label for="id_password1" class="col-6 fw-bold">Password</label>
-        <div class="col-6">
-          <input autocomplete="current-password" class="form-control" type="password" name="password"
-            placeholder="Password" required="" id="id_password">
+        <!-- <a href="#" class="btn-face"><i class="fa fa-facebook-official"></i>Facebook </a> -->
+        <div class="row my-3">
+          <label class="col-6 fw-bold" for="id_email">Email</label>
+          <div class="col-6">
+            <input class="form-control" autocomplete="username" type="email" name="login" placeholder="E-mail address"
+              autofocus="autofocus" required="" id="id_login">
+          </div>
         </div>
-      </div>
-      <a href="{% url 'account_reset_password' %}">Forgot Password?</a>
 
-      <div class="row">
-        <div class="col-6"></div>
-        <div class="col-6">
-          <button class="btn text-white my-3" style="background: #030234;" type="submit">Log In</button>
+        <div class="row my-3">
+          <label for="id_password1" class="col-6 fw-bold">Password</label>
+          <div class="col-6">
+            <input autocomplete="current-password" class="form-control" type="password" name="password"
+              placeholder="Password" required="" id="id_password">
+          </div>
         </div>
-      </div>
-      <div class="text-center">
-        Not a member? <a href="{{ signup_url }}">Sign Up Now</a>
-      </div>
-  </form>
+        <button class="btn text-white my-3" style="background: #030234;" type="submit">Log In</button>
+        <!-- <div class="row">
+          <div class="col-6"></div>
+          <div class="col-6">
+          </div>
+        </div> -->
+        <div class="d-flex justify-content-center mb-4">
+          <a href="{% provider_login_url 'google' %}" class="btn btn-primary w-50"><img class="img-fluid px-3"
+              src="{% static 'icon-google.png' %}" alt="GOOGLE">Log In with Google</a>
+        </div>
+        <div class="card-footer text-center">
+          <h5>Not a member? <a href="{{ signup_url }}">Sign Up Now</a></h5>
+          <a class="my-2" href="{% url 'account_reset_password' %}">Forgot Password?</a>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="col-3"></div>
 </div>
 {% endblock %}

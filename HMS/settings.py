@@ -62,14 +62,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-
-AUTHENTICATION_BACKENDS = [
-    # Needed to login by username in Django admin, regardless of `allauth`
-    'django.contrib.auth.backends.ModelBackend',
-    # `allauth` specific authentication methods, such as login by e-mail
-    'allauth.account.auth_backends.AuthenticationBackend',
-]
-
 ROOT_URLCONF = 'HMS.urls'
 
 TEMPLATES = [
@@ -106,7 +98,6 @@ else:
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -122,7 +113,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
@@ -135,13 +125,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
-SITE_ID = 2
-
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_EMAIL_VERIFICATION = 'mandotory'
-ACCOUNT_USERNAME_REQUIRED = False
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
@@ -164,25 +147,36 @@ SOCIALACCOUNT_PROVIDERS = {
         # credentials, or list them here:
         'APP': {
             'client_id': os.environ.get('GOOGLE_CLIENT_ID'),
-            # '793973873125-lhcbfqnel4q2ic3opjohi5lm4lfgc47o.apps.googleusercontent.com',
-            'secret': 'hRbVGZXqwxeb961UtaUiZQxU',
+            'secret': os.environ.get('GOOGLE_SECRET_KEY'),
             'key': ''
         }
     }
 }
 
-
 AUTH_USER_MODEL = 'users.CustomUser'
-# This is needed to remove the error you get after removing username field from user model
-ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = os.environ.get('EMAIL_HOST')
+EMAIL_USE_TLS = True
+EMAIL_PORT = os.environ.get('EMAIL_PORT')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+SITE_ID = 2
+
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_SESSION_REMEMBER = True
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
-
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
-STRIPE_PUBLIC_KEY = ""
-STRIPE_SECRET_KEY = ""
-STRIPE_WEBHOOK_SECRET = ""
-
-# django_heroku.settings(locals())
+ACCOUNT_EMAIL_VERIFICATION = 'mandotory'
+ACCOUNT_SIGNUP_FORM_CLASS = 'users.forms.SignupForm'
