@@ -48,8 +48,9 @@ INSTALLED_APPS = [
 
     # my_apps
     'hotel',
+    'food',
     'hotel.booking_functions',
-    'users'
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -136,6 +137,8 @@ STATIC_ROOT = 'static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'allauth/static')
 ]
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 LOGIN_REDIRECT_URL = '/'
 

@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% block head_title %}Checkout{% endblock %}
+{% block content %}
+<script src="https://js.stripe.com/v3/"></script>
+<div class="container">
+  <h1 class="text-center py-3">Checkout</h1>
+  <div class="row justify-content-center">
+    <div class="col-md-5 col-sm-12 p-2 text-center">
+      <h1>Order Submitted!</h1>
+      <p>You should receive a confirmation email soon.</p>
+      <a href="/">Go to the homepage</a>
+    </div>
+  </div>
+  <div class="container mt-5">
+    {{ checkout_id }}
+    <h3 class="text-center">Order Summary:</h3>
+    <div class="row">
+      <div class="col-3"></div>
+      <div class="col-6">
+        <div class="container">
+          <div class="row">
+            <div class="col-6">
+              <h3>Card Number : </h3>
+            </div>
+            <div class="col-6">
+              4242 4242 4242 4242
+            </div>
+          </div>
+          <div class="row">
+            <div class="fw-bold col-6">
+              Name:
+            </div>
+            <div class="col-6">
+              <span>
+                {{request.user.first_name}} {{request.user.last_name}}
+              </span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="fw-bold col-6">
+              Email:
+            </div>
+            <div class="col-6">
+              {{request.user.email}}
+            </div>
+          </div>
+          {% for item in items.all %}
+          <div class="row">
+            <div class="fw-bold col-6">
+              {{ item.name }}
+            </div>
+            <div class="col-6">
+              {{ item.price }}
+            </div>
+          </div>
+          {% endfor %}
+          <div class="row">
+            <div class="fw-bold col-6">
+              Total:
+            </div>
+            <div class="col-6">
+              {{ price }}
+            </div>
+          </div>
+        </div>
+        <h3>CVV number, and Card numer are random.</h3>
+        <p class="small">(Dummy Data for successful payment)</p>
+      </div>
+      <div class="col-3"></div>
+    </div>
+  </div>
+
+</div>
+<div class="d-flex justify-content-center pb-2 pt-5">
+  <button class="btn text-white" style="background: #030234;" id="checkout_btn">Pay Now</button>
+</div>
+<script>
+  const checkout_id = `{{ checkout_id }}`;
+  var stripe = Stripe("pk_test_51IvCaFSC7JV9pI8Ofrvi4gB6DogIRXtQ3jKFSDvhZJDETThlacfaUAON8vGtnzDUsSMCJ1Svix8SQCfuzC5iaM1P00qXFPYbgW");
+  var checkoutButton = document.getElementById("checkout_btn");
+  checkoutButton.addEventListener("click", function () {
+    stripe.redirectToCheckout({
+      sessionId: `${checkout_id}`
+    })
+      .then(function (result) {
+        if (result.error) {
+          alert(result.error.message);
+        }
+      })
+      .catch(function (error) {
+        console.error("Error:", error);
+      })
+  });
+</script>
+{% endblock content %}s

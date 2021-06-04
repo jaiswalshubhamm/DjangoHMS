@@ -1,18 +1,17 @@
 from django.shortcuts import render, HttpResponse, redirect
+from django.urls.base import reverse_lazy
 from django.views.generic import ListView, View, DeleteView
-from django.urls import reverse, reverse_lazy
-from .models import Room, Booking, Person,RoomCategory
-from .forms import AvailabilityForm, PersonForm
-from hotel.booking_functions.availability import check_availability
-from django.contrib.auth.models import User
 from hotel.booking_functions.find_total_room_charge import find_total_room_charge
-from django.contrib.auth.decorators import login_required
+from hotel.booking_functions.availability import check_availability
+from django.contrib import messages
+from .models import Room, Booking, RoomCategory
+from .forms import AvailabilityForm
 import os
 import stripe
 
 stripe.api_key = os.environ.get('STRIPE_API_SECRET_KEY')
-# Create your views here.
 
+# Create your views here.
 class BookingFormView(View):
     def get(self, request, *args, **kwargs):
         if "check_in" in request.session:
@@ -28,15 +27,25 @@ class BookingFormView(View):
         form = AvailabilityForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
-            request.session['check_in'] = data['check_in'].strftime(
-                "%Y-%m-%dT%H:%M")
-            request.session['check_out'] = data['check_out'].strftime(
-                "%Y-%m-%dT%H:%M")
-            request.session['room_category'] = data['room_category'].category
-            request.session['amount'] = find_total_room_charge(data['check_in'], data['check_out'], data['room_category'])
-            return redirect('hotel:CheckoutView')
+            roomCategory=RoomCategory.objects.get(category= data['room_category'].category)
+            rooms = Room.objects.filter(category=roomCategory)
+            check_in = data['check_in'].strftime("%Y-%m-%dT%H:%M")
+            check_out = data['check_out'].strftime("%Y-%m-%dT%H:%M")
+            available=False
+            if len(rooms)>0:
+                for room in rooms:
+                    if(check_availability(room, check_in, check_out)):
+                        available=True
+                        request.session['room_no'] = room.number
+            if(available):
+                request.session['check_in'] = check_in
+                request.session['check_out'] = data['check_out'].strftime("%Y-%m-%dT%H:%M")
+                request.session['amount'] = find_total_room_charge(data['check_in'], data['check_out'], data['room_category'])
+                return redirect('hotel:CheckoutView')
+            else:
+                messages.error(request,'Room not available in this category. Select another')
+                return redirect('/book/')
         return HttpResponse('form not valid', form.errors)
-
 
 def RoomListView(request):
     rooms = Room.objects.all()
@@ -67,9 +76,7 @@ class BookingListView(ListView):
 
 class RoomDetailView(View):
     def get(self, request, *args, **kwargs):
-        print(self.request.user)
         category = self.kwargs.get('category', None)
-        print(category)
         form = AvailabilityForm()
         room_list = Room.objects.filter(category=category)
 
@@ -96,8 +103,9 @@ class CheckoutView(View):
         if not request.user.is_authenticated:
             return redirect('/accounts/login')
         user = request.user
-        person_name = user.first_name + user.last_name
         person_email = user.email
+        person_name = user.first_name + user.last_name
+        roomA = Room.objects.get(number=request.session['room_no'])
         customer = stripe.Customer.create(
             name=person_name,
             email=person_email
@@ -123,12 +131,11 @@ class CheckoutView(View):
             )
             booking = Booking.objects.create(
                 user = request.user,
-                room = request.session['room_category'],
+                room = roomA,
                 check_in = request.session['check_in'],
                 check_out = request.session['check_out'],
                 payment_status = 'INC'
             )
-            print(booking)
             booking.save()
             context = {
                 'checkout_id': checkout_session.id,

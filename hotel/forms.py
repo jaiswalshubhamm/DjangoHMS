@@ -1,7 +1,7 @@
 from django import forms
 from datetime import datetime
 from django.core.exceptions import ValidationError
-from .models import RoomCategory, Person
+from .models import RoomCategory #, Person
 
 
 class AvailabilityForm(forms.Form):
@@ -24,8 +24,3 @@ class AvailabilityForm(forms.Form):
             raise ValidationError("Times beyond working hours, please enter value within working hours")
         else:
             return self.cleaned_data
-
-class PersonForm(forms.ModelForm):
-    class Meta:
-        model = Person
-        fields = '__all__'
