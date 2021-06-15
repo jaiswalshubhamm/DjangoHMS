@@ -6,7 +6,7 @@ urlpatterns = [
     path('', HomeView, name='HomeView'),
     path('about', AboutView, name='AboutView'),
     path('allrooms', RoomListView, name='RoomListView'),
-    path('book/', BookingFormView.as_view(), name='BookingFormView'),
+    path('book', BookingFormView.as_view(), name='BookingFormView'),
     path('booking_list/', BookingListView.as_view(), name='BookingListView'),
     path('room/<category>', RoomDetailView.as_view(), name='RoomDetailView'),
     path('booking/cancel/<pk>', CancelBookingView.as_view(),
@@ -14,6 +14,6 @@ urlpatterns = [
     path('checkout/', CheckoutView.as_view(), name='CheckoutView'),
     path('success/', success_view, name='success_view'),
     path('cancel/', cancel_view, name='cancel_view'),
-    path('contact/', ContactUsView, name="ContactUsView")
+    path('contact', ContactUsView, name="ContactUsView")
 
 ]

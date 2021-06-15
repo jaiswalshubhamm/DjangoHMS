@@ -37,24 +37,16 @@
                         <a class="nav-link text-white" href="/book">Book Room</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="/food">Order Food</a>
+                        <a class="nav-link text-white" href="/food/">Order Food</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-white" href="/about">About</a>
                     </li>
                     {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="/accounts/logout">Logout <i class="fa fa-sign-out"></i></a>
+                        <a class="nav-link text-white" href="/accounts/logout/">Logout <i class="fa fa-sign-out"></i></a>
                     </li>
                     {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="/accounts/signup">Register <i
-                                class="fas fa-user-plus"></i></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="/accounts/login/">Login <i class="fa fa-sign-in"></i>
-                        </a>
-                    </li>
                     {% endif %}
                     <li class="nav-item">
                         <a class="nav-link text-white" href="/contact">Contact Us</a>
